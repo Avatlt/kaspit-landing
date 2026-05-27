@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>קספית — תזרים המזומנים שלך, בשליטה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0F1117;
+  --ink-mid: #3A3D4A;
+  --ink-light: #7A7E8E;
+  --paper: #F7F6F2;
+  --paper-warm: #EDEAE2;
+  --green: #1A6B3A;
+  --green-light: #D6EEE0;
+  --green-mid: #2E9455;
+  --amber: #C47B1A;
+  --amber-light: #FDF0DC;
+  --red: #C43030;
+  --red-light: #FDEAEA;
+  --blue: #1A4F8A;
+  --blue-light: #DCE9F8;
+  --border: rgba(15,17,23,0.10);
+  --shadow: 0 2px 16px rgba(15,17,23,0.08);
+  --shadow-lg: 0 8px 48px rgba(15,17,23,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Assistant',sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  direction:rtl;
+  overflow-x:hidden;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 48px;
+  background:rgba(247,246,242,0.92);
+  backdrop-filter:blur(12px);
+  border-bottom:0.5px solid var(--border);
+}
+.nav-logo{
+  font-family:'Heebo',sans-serif;
+  font-size:22px;font-weight:700;
+  color:var(--ink);
+  letter-spacing:-0.5px;
+}
+.nav-logo span{color:var(--green-mid)}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{font-size:15px;color:var(--ink-mid);text-decoration:none;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--green)}
+.btn-nav{
+  padding:9px 22px;
+  background:var(--ink);
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  font-size:14px;font-weight:600;
+  font-family:'Assistant',sans-serif;
+  cursor:pointer;
+  transition:background .2s,transform .15s;
+}
+.btn-nav:hover{background:var(--green);transform:translateY(-1px)}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;align-items:center;
+  padding:120px 48px 80px;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';
+  position:absolute;
+  top:-200px;left:-200px;
+  width:700px;height:700px;
+  background:radial-gradient(circle,rgba(46,148,85,0.08) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:64px;
+  align-items:center;
+  max-width:1200px;
+  margin:0 auto;
+  width:100%;
+}
+.hero-label{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:13px;font-weight:600;
+  color:var(--green);
+  background:var(--green-light);
+  padding:5px 14px;
+  border-radius:20px;
+  margin-bottom:20px;
+  letter-spacing:0.3px;
+}
+.hero-label i{font-size:14px}
+h1{
+  font-family:'Heebo',sans-serif;
+  font-size:56px;font-weight:900;
+  line-height:1.1;
+  letter-spacing:-2px;
+  margin-bottom:20px;
+  color:var(--ink);
+}
+h1 .accent{
+  color:var(--green-mid);
+  position:relative;
+}
+h1 .accent::after{
+  content:'';
+  position:absolute;
+  bottom:-4px;left:0;right:0;
+  height:3px;
+  background:var(--green-mid);
+  border-radius:2px;
+  opacity:0.4;
+}
+.hero-sub{
+  font-size:18px;
+  color:var(--ink-mid);
+  line-height:1.6;
+  margin-bottom:32px;
+  max-width:480px;
+  font-weight:400;
+}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap}
+.btn-primary{
+  padding:14px 32px;
+  background:var(--ink);
+  color:#fff;
+  border:none;border-radius:12px;
+  font-size:16px;font-weight:700;
+  font-family:'Assistant',sans-serif;
+  cursor:pointer;
+  transition:background .2s,transform .15s,box-shadow .2s;
+  box-shadow:0 4px 24px rgba(15,17,23,0.18);
+}
+.btn-primary:hover{background:var(--green);transform:translateY(-2px);box-shadow:0 8px 32px rgba(46,148,85,0.25)}
+.btn-secondary{
+  padding:14px 32px;
+  background:transparent;
+  color:var(--ink);
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  font-size:16px;font-weight:600;
+  font-family:'Assistant',sans-serif;
+  cursor:pointer;
+  transition:border-color .2s,background .2s;
+}
+.btn-secondary:hover{border-color:var(--ink);background:rgba(15,17,23,0.04)}
+.hero-note{font-size:13px;color:var(--ink-light);margin-top:14px}
+
+/* PHONE MOCKUP */
+.phone-wrap{
+  display:flex;justify-content:center;
+  position:relative;
+  padding:20px 10px;
+}
+.phone-wrap::before{
+  content:'';
+  position:absolute;
+  top:10%;left:10%;right:10%;bottom:10%;
+  background:radial-gradient(ellipse,rgba(46,148,85,0.10) 0%,transparent 70%);
+  filter:blur(40px);
+  pointer-events:none;
+}
+.phone-device{
+  width:220px;
+  background:#fff;
+  border-radius:44px;
+  border:9px solid #0F1117;
+  box-shadow:
+    0 24px 60px rgba(15,17,23,0.22),
+    0 0 0 1px rgba(255,255,255,0.1) inset;
+  overflow:hidden;
+  position:relative;
+  z-index:1;
+  animation:float 4s ease-in-out infinite;
+  height:478px;
+  max-height:478px;
+  display:flex;
+  flex-direction:column;
+}
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+.phone-notch{
+  width:100%;
+  height:30px;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding-top:7px;
+  flex-shrink:0;
+}
+.phone-notch::after{
+  content:'';
+  width:68px;
+  height:20px;
+  background:#0F1117;
+  border-radius:14px;
+  display:block;
+}
+.phone-device::before{
+  content:'';
+  position:absolute;
+  left:-11px;top:80px;
+  width:3px;height:24px;
+  background:#1A1A1A;
+  border-radius:2px 0 0 2px;
+  box-shadow:0 34px 0 #1A1A1A,0 64px 0 #1A1A1A;
+  z-index:10;
+}
+.phone-device::after{
+  content:'';
+  position:absolute;
+  right:-11px;top:96px;
+  width:3px;height:50px;
+  background:#1A1A1A;
+  border-radius:0 2px 2px 0;
+  z-index:10;
+}
+.phone-screen{
+  background:var(--paper);
+  padding:7px 10px 14px;
+  direction:rtl;
+  flex:1;
+  overflow:hidden;
+  max-height:100%;
+}
+.ps-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.ps-logo{font-family:'Heebo',sans-serif;font-size:11px;font-weight:700;color:var(--ink)}
+.ps-logo span{color:var(--green-mid)}
+.ps-date{font-size:9px;color:var(--ink-light)}
+.ps-alert{
+  background:var(--red-light);
+  border:0.5px solid #F7C1C1;
+  border-radius:8px;
+  padding:5px 7px;
+  font-size:9px;color:#791F1F;
+  margin-bottom:7px;
+  line-height:1.4;
+  display:flex;align-items:flex-start;gap:4px;
+}
+.ps-alert-ic{font-size:11px;color:var(--red);flex-shrink:0;margin-top:1px}
+.ps-metrics{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:7px}
+.ps-mc{
+  background:#fff;
+  border-radius:8px;
+  padding:6px 7px;
+  border:0.5px solid var(--border);
+}
+.ps-mc-l{font-size:8px;color:var(--ink-light);margin-bottom:1px}
+.ps-mc-v{font-size:13px;font-weight:700;font-family:'Heebo',sans-serif}
+.ps-mc-v.pos{color:var(--green)}
+.ps-mc-v.neg{color:var(--red)}
+.ps-mc-v.warn{color:var(--amber)}
+.ps-card{background:#fff;border-radius:8px;border:0.5px solid var(--border);overflow:hidden;margin-bottom:5px}
+.ps-card-hd{padding:5px 8px;border-bottom:0.5px solid var(--border);font-size:9px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:4px}
+.ps-bars{padding:5px 8px;display:flex;flex-direction:column;gap:4px}
+.ps-bar-row{display:flex;align-items:center;gap:5px}
+.ps-bar-lbl{font-size:8px;color:var(--ink-light);width:22px;flex-shrink:0}
+.ps-bar-track{flex:1;height:9px;background:#F0EEE8;border-radius:2px;overflow:hidden}
+.ps-bar-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-right:4px;justify-content:flex-end}
+.ps-bar-fill span{font-size:7px;font-weight:600;color:#fff}
+.ps-bar-end{font-size:8px;font-weight:600;width:28px;text-align:left;flex-shrink:0}
+.ps-tip{
+  background:var(--amber-light);
+  border:0.5px solid #FAC775;
+  border-radius:8px;
+  padding:5px 7px;
+  font-size:9px;color:#633806;
+  line-height:1.4;
+}
+
+/* TRUST BAR */
+.trust-bar{
+  background:var(--paper-warm);
+  border-top:0.5px solid var(--border);
+  border-bottom:0.5px solid var(--border);
+  padding:18px 48px;
+  display:flex;align-items:center;justify-content:center;gap:48px;
+  flex-wrap:wrap;
+}
+.trust-item{
+  display:flex;align-items:center;gap:8px;
+  font-size:14px;font-weight:500;color:var(--ink-mid);
+}
+.trust-item i{font-size:18px;color:var(--green-mid)}
+
+/* FEATURES */
+.features{padding:100px 48px;max-width:1200px;margin:0 auto}
+.section-label{
+  font-size:13px;font-weight:700;
+  color:var(--green);
+  letter-spacing:1px;
+  text-transform:uppercase;
+  margin-bottom:12px;
+}
+.section-title{
+  font-family:'Heebo',sans-serif;
+  font-size:42px;font-weight:800;
+  line-height:1.15;
+  letter-spacing:-1.5px;
+  margin-bottom:16px;
+  color:var(--ink);
+}
+.section-sub{
+  font-size:18px;color:var(--ink-mid);
+  max-width:560px;
+  line-height:1.6;
+  margin-bottom:64px;
+}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feat-card{
+  background:#fff;
+  border:0.5px solid var(--border);
+  border-radius:20px;
+  padding:28px 24px;
+  transition:transform .2s,box-shadow .2s;
+}
+.feat-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.feat-ic{
+  width:48px;height:48px;
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:18px;
+  font-size:24px;
+}
+.feat-card h3{
+  font-family:'Heebo',sans-serif;
+  font-size:18px;font-weight:700;
+  margin-bottom:10px;
+  letter-spacing:-0.3px;
+}
+.feat-card p{font-size:14px;color:var(--ink-mid);line-height:1.6}
+.feat-tag{
+  display:inline-block;
+  font-size:11px;font-weight:600;
+  padding:3px 9px;border-radius:20px;
+  margin-top:14px;
+}
+
+/* SEGMENTS */
+.segments{
+  background:var(--ink);
+  padding:100px 48px;
+  color:#fff;
+}
+.segments-inner{max-width:1200px;margin:0 auto}
+.segments-title{
+  font-family:'Heebo',sans-serif;
+  font-size:42px;font-weight:800;
+  letter-spacing:-1.5px;
+  margin-bottom:12px;
+  color:#fff;
+}
+.segments-sub{font-size:18px;color:rgba(255,255,255,0.6);margin-bottom:64px}
+.seg-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.seg-card{
+  background:rgba(255,255,255,0.06);
+  border:0.5px solid rgba(255,255,255,0.12);
+  border-radius:20px;
+  padding:32px 28px;
+  transition:background .2s;
+}
+.seg-card:hover{background:rgba(255,255,255,0.09)}
+.seg-ic{
+  width:52px;height:52px;
+  border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;
+  margin-bottom:18px;
+}
+.seg-card h3{
+  font-family:'Heebo',sans-serif;
+  font-size:22px;font-weight:700;
+  color:#fff;
+  margin-bottom:10px;
+}
+.seg-card p{font-size:14px;color:rgba(255,255,255,0.65);line-height:1.6;margin-bottom:16px}
+.seg-price{
+  font-family:'Heebo',sans-serif;
+  font-size:28px;font-weight:900;
+  color:#fff;
+}
+.seg-price span{font-size:14px;font-weight:400;color:rgba(255,255,255,0.5)}
+.seg-features{display:flex;flex-direction:column;gap:6px;margin-top:16px}
+.seg-feat{display:flex;align-items:center;gap:7px;font-size:13px;color:rgba(255,255,255,0.7)}
+.seg-feat i{font-size:14px;color:var(--green-mid)}
+
+/* SOCIAL PROOF */
+.proof{padding:100px 48px;background:var(--paper-warm)}
+.proof-inner{max-width:1200px;margin:0 auto}
+.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.proof-card{
+  background:#fff;
+  border:0.5px solid var(--border);
+  border-radius:20px;
+  padding:28px 24px;
+}
+.proof-stars{color:#F5A623;font-size:16px;margin-bottom:14px;letter-spacing:2px}
+.proof-text{font-size:15px;line-height:1.6;color:var(--ink-mid);margin-bottom:18px;font-style:italic}
+.proof-author{display:flex;align-items:center;gap:10px}
+.proof-avatar{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;
+}
+.proof-name{font-size:14px;font-weight:600;color:var(--ink)}
+.proof-role{font-size:12px;color:var(--ink-light)}
+
+/* CTA SECTION */
+.cta-section{
+  padding:100px 48px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.cta-section::before{
+  content:'';
+  position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  width:600px;height:400px;
+  background:radial-gradient(ellipse,rgba(46,148,85,0.1) 0%,transparent 70%);
+  pointer-events:none;
+}
+.cta-title{
+  font-family:'Heebo',sans-serif;
+  font-size:52px;font-weight:900;
+  letter-spacing:-2px;
+  margin-bottom:16px;
+  position:relative;z-index:1;
+}
+.cta-sub{font-size:18px;color:var(--ink-mid);margin-bottom:36px;position:relative;z-index:1}
+.cta-btns{display:flex;justify-content:center;gap:12px;position:relative;z-index:1}
+.cta-note{font-size:13px;color:var(--ink-light);margin-top:16px;position:relative;z-index:1}
+
+/* FOOTER */
+footer{
+  background:var(--ink);
+  color:rgba(255,255,255,0.6);
+  padding:48px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;
+  gap:20px;
+}
+.footer-logo{
+  font-family:'Heebo',sans-serif;
+  font-size:20px;font-weight:700;color:#fff;
+}
+.footer-logo span{color:var(--green-mid)}
+.footer-links{display:flex;gap:24px;flex-wrap:wrap}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:#fff}
+.footer-note{font-size:12px;color:rgba(255,255,255,0.3)}
+
+/* ICONS (using tabler via CDN) */
+@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css');
+
+/* ANIMATIONS */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(24px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.hero-content>*{animation:fadeUp .6s ease both}
+.hero-content>*:nth-child(1){animation-delay:.1s}
+.hero-content>*:nth-child(2){animation-delay:.2s}
+.hero-content>*:nth-child(3){animation-delay:.3s}
+.hero-content>*:nth-child(4){animation-delay:.4s}
+.hero-content>*:nth-child(5){animation-delay:.5s}
+
+@media(max-width:900px){
+  nav{padding:14px 20px}
+  .nav-links{display:none}
+  .hero{padding:100px 20px 60px}
+  .hero-grid{grid-template-columns:1fr;gap:40px}
+  h1{font-size:38px}
+  .features,.segments,.proof,.cta-section{padding:60px 20px}
+  .feat-grid,.seg-grid,.proof-grid{grid-template-columns:1fr}
+  .trust-bar{padding:16px 20px;gap:20px}
+  footer{padding:32px 20px;flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><span>קספית</span> Kaspit</div>
+  <div class="nav-links">
+    <a href="#features">יתרונות</a>
+    <a href="#segments">למי מתאים</a>
+    <a href="#proof">לקוחות</a>
+    <a href="#pricing">מחירים</a>
+  </div>
+  <button class="btn-nav" onclick="document.getElementById('waitlist-hero').scrollIntoView({behavior:'smooth'})">הצטרף לרשימת המתנה ←</button>
+</nav>
+
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-content">
+      <div class="hero-label">
+        <i class="ti ti-sparkles"></i>
+        הכלי הפיננסי לעסקים קטנים בישראל
+      </div>
+      <h1>תדע תמיד<br>אם יש לך <span class="accent">כסף</span><br>לסוף החודש</h1>
+      <p class="hero-sub">קספית מחברת את שעות העבודה, השכר, החשבוניות והתחזיות לתמונה אחת פשוטה — כדי שתוכל לנהל את העסק שלך, לא רק לרוץ אחריו.</p>
+      <div id="waitlist-hero" style="margin-top:8px">
+        <div style="font-size:14px;font-weight:600;color:var(--green);margin-bottom:10px;display:flex;align-items:center;gap:6px">
+          <i class="ti ti-clock" style="font-size:16px"></i>
+          קספית בבנייה — הירשם לרשימת המתנה
+        </div>
+        <form onsubmit="submitWaitlist(event,'hero')" style="display:flex;gap:8px;flex-wrap:wrap">
+          <input type="email" id="email-hero" placeholder="הכנס כתובת מייל..." required
+            style="flex:1;min-width:200px;padding:12px 16px;border-radius:12px;border:1.5px solid var(--border);font-size:14px;font-family:'Assistant',sans-serif;direction:rtl;background:#fff;color:var(--ink);outline:none;transition:border-color .2s"
+            onfocus="this.style.borderColor='var(--green-mid)'"
+            onblur="this.style.borderColor='var(--border)'">
+          <button type="submit" class="btn-primary" style="white-space:nowrap">קבל גישה ראשון ←</button>
+        </form>
+        <div id="success-hero" style="display:none;margin-top:10px;padding:10px 14px;background:var(--green-light);border-radius:10px;font-size:13px;color:var(--green);font-weight:500">
+          ✓ נרשמת! נעדכן אותך כשקספית מוכן לשימוש.
+        </div>
+        <p style="font-size:12px;color:var(--ink-light);margin-top:10px">ללא ספאם · הודעה אחת כשמשיקים · בעברית</p>
+      </div>
+    </div>
+    <div class="phone-wrap">
+      <div class="phone-device">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="ps-header">
+            <div class="ps-logo"><span>קספית</span></div>
+            <div class="ps-date">יוני 2025</div>
+          </div>
+          <div class="ps-alert">
+            <span class="ps-alert-ic">⚠</span>
+            <span><strong>שים לב:</strong> בעוד 19 יום לא יהיה כסף למשכורות. מגאס עוד לא שילם — ₪12,726 תקועים.</span>
+          </div>
+          <div class="ps-metrics">
+            <div class="ps-mc">
+              <div class="ps-mc-l">הכנסות החודש</div>
+              <div class="ps-mc-v pos">₪38,400</div>
+            </div>
+            <div class="ps-mc">
+              <div class="ps-mc-l">יתרת קופה</div>
+              <div class="ps-mc-v warn">₪14,200</div>
+            </div>
+            <div class="ps-mc">
+              <div class="ps-mc-l">משכורות</div>
+              <div class="ps-mc-v neg">₪17,500</div>
+            </div>
+            <div class="ps-mc">
+              <div class="ps-mc-l">חוב לקוחות</div>
+              <div class="ps-mc-v neg">₪8,400</div>
+            </div>
+          </div>
+          <div class="ps-card">
+            <div class="ps-card-hd">📊 תחזית תזרים — 60 יום</div>
+            <div class="ps-bars">
+              <div class="ps-bar-row">
+                <div class="ps-bar-lbl">יוני</div>
+                <div class="ps-bar-track"><div class="ps-bar-fill" style="width:72%;background:#2E9455"><span>14.2k</span></div></div>
+                <div class="ps-bar-end" style="color:var(--amber)">סיכון</div>
+              </div>
+              <div class="ps-bar-row">
+                <div class="ps-bar-lbl">יולי</div>
+                <div class="ps-bar-track"><div class="ps-bar-fill" style="width:85%;background:#2E9455"><span>18.5k</span></div></div>
+                <div class="ps-bar-end" style="color:var(--green)">טוב</div>
+              </div>
+              <div class="ps-bar-row">
+                <div class="ps-bar-lbl">אוג׳</div>
+                <div class="ps-bar-track"><div class="ps-bar-fill" style="width:30%;background:#C43030"><span>6.1k</span></div></div>
+                <div class="ps-bar-end" style="color:var(--red)">גירעון</div>
+              </div>
+            </div>
+          </div>
+          <div class="ps-tip">💡 <strong>המלצה:</strong> שלח תזכורת תשלום למגאס היום — זה יסגור את הפער.</div>
+
+          <div class="ps-card" style="margin-top:8px">
+            <div class="ps-card-hd">👥 עובדים — יוני</div>
+            <div style="padding:6px 10px;display:flex;flex-direction:column;gap:5px">
+              <div style="display:flex;align-items:center;gap:7px;padding:4px 0;border-bottom:0.5px solid rgba(15,17,23,0.07)">
+                <div style="width:24px;height:24px;border-radius:50%;background:#DCE9F8;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#1A4F8A;flex-shrink:0">ר.כ</div>
+                <div style="flex:1;font-size:11px;color:#0F1117;font-weight:500">רונן כהן</div>
+                <div style="font-size:11px;font-weight:700;color:#0F1117">₪7,200</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:7px;padding:4px 0;border-bottom:0.5px solid rgba(15,17,23,0.07)">
+                <div style="width:24px;height:24px;border-radius:50%;background:#D6EEE0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#1A6B3A;flex-shrink:0">מ.ל</div>
+                <div style="flex:1;font-size:11px;color:#0F1117;font-weight:500">מיכל לוי</div>
+                <div style="font-size:11px;font-weight:700;color:#0F1117">₪5,800</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:7px;padding:4px 0">
+                <div style="width:24px;height:24px;border-radius:50%;background:#FDF0DC;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#C47B1A;flex-shrink:0">א.מ</div>
+                <div style="flex:1;font-size:11px;color:#0F1117;font-weight:500">אמיר מזרחי</div>
+                <div style="font-size:11px;font-weight:700;color:#0F1117">₪5,200</div>
+              </div>
+            </div>
+            <div style="padding:5px 10px 8px;display:flex;justify-content:space-between;border-top:0.5px solid rgba(15,17,23,0.07)">
+              <span style="font-size:10px;color:#7A7E8E">סה"כ שכר (5 עובדים)</span>
+              <span style="font-size:12px;font-weight:700;color:#0F1117">₪17,500</span>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:space-around;padding:10px 0 4px;margin-top:8px;border-top:0.5px solid rgba(15,17,23,0.08)">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+              <div style="width:28px;height:28px;background:#D6EEE0;border-radius:9px;display:flex;align-items:center;justify-content:center"><span style="font-size:14px">🏠</span></div>
+              <span style="font-size:8px;color:#2E9455;font-weight:600">ראשי</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+              <div style="width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center"><span style="font-size:14px">📋</span></div>
+              <span style="font-size:8px;color:#7A7E8E">טאבל</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+              <div style="width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center"><span style="font-size:14px">📊</span></div>
+              <span style="font-size:8px;color:#7A7E8E">תזרים</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+              <div style="width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center"><span style="font-size:14px">🧾</span></div>
+              <span style="font-size:8px;color:#7A7E8E">חשבוניות</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+              <div style="width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center"><span style="font-size:14px">💡</span></div>
+              <span style="font-size:8px;color:#7A7E8E">מסים</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:center;padding:6px 0 2px">
+            <div style="width:120px;height:5px;background:#0F1117;border-radius:3px;opacity:0.2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="trust-bar">
+  <div class="trust-item"><i class="ti ti-building-bank"></i> מסונכרן עם בנקי ישראל</div>
+  <div class="trust-item"><i class="ti ti-file-invoice"></i> חשבוניות ישראל בלחיצה אחת</div>
+  <div class="trust-item"><i class="ti ti-shield-check"></i> תואם חוק הגנת הפרטיות</div>
+  <div class="trust-item"><i class="ti ti-clock"></i> מתעדכן בזמן אמת</div>
+  <div class="trust-item"><i class="ti ti-brand-whatsapp"></i> התראות בוואטסאפ</div>
+</div>
+
+<section class="features" id="features">
+  <div class="section-label">מה קספית עושה</div>
+  <h2 class="section-title">כל מה שצריך<br>בממשק אחד</h2>
+  <p class="section-sub">לא תוכנת חשבונאות. לא ERP. כלי פשוט לבעל עסק שרוצה לדעת לאן הולך הכסף שלו.</p>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-ic" style="background:#D6EEE0"><i class="ti ti-chart-line" style="color:var(--green)"></i></div>
+      <h3>תחזית תזרים 90 יום</h3>
+      <p>ראה מתי יהיה לך כסף ומתי לא — שבועות לפני שזה קורה. עם התראה אוטומטית בוואטסאפ.</p>
+      <span class="feat-tag" style="background:var(--green-light);color:var(--green)">הדיפרנציאטור שלנו</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-ic" style="background:#DCE9F8"><i class="ti ti-clock" style="color:var(--blue)"></i></div>
+      <h3>טאבל שעות ← משכורות</h3>
+      <p>הזן שעות עבודה — קספית מחשבת שעות נוספות, ביטוח לאומי, גמל. ושולחת חשבונית ללקוח אוטומטית.</p>
+      <span class="feat-tag" style="background:var(--blue-light);color:var(--blue)">חוסך 3 שעות בחודש</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-ic" style="background:#FDF0DC"><i class="ti ti-receipt" style="color:var(--amber)"></i></div>
+      <h3>חשבוניות בלחיצה אחת</h3>
+      <p>מהטאבל לחשבונית ממוכנת דרך iCount — בלי להקליד שוב. מספר אישור מרשות המסים אוטומטי.</p>
+      <span class="feat-tag" style="background:var(--amber-light);color:var(--amber)">חשבוניות ישראל 2025</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-ic" style="background:#D6EEE0"><i class="ti ti-calendar" style="color:var(--green)"></i></div>
+      <h3>לוח תשלומים חכם</h3>
+      <p>משכורות, מע"מ, ביטוח לאומי, גמל — הכל על לוח שנה אחד. עם תזכורות לפני כל תאריך יעד.</p>
+      <span class="feat-tag" style="background:var(--green-light);color:var(--green)">כולל חגי תשרי</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-ic" style="background:#FDF0DC"><i class="ti ti-pig-money" style="color:var(--amber)"></i></div>
+      <h3>רפורמת עסק זעיר</h3>
+      <p>קספית מזהה אם אתה עסק זעיר ומחשבת כמה אתה חוסך בניכוי 30% אוטומטי — בלי קבלות.</p>
+      <span class="feat-tag" style="background:var(--amber-light);color:var(--amber)">חדש 2025</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-ic" style="background:#DCE9F8"><i class="ti ti-users" style="color:var(--blue)"></i></div>
+      <h3>גישה לרואה חשבון</h3>
+      <p>שתף את הנתונים עם הרו"ח שלך. הוא רואה הכל, מוריד לHashavshevet, שואל פחות שאלות.</p>
+      <span class="feat-tag" style="background:var(--blue-light);color:var(--blue)">תכנית פרו</span>
+    </div>
+  </div>
+</section>
+
+<section class="segments" id="segments">
+  <div class="segments-inner">
+    <div class="section-label" style="color:rgba(255,255,255,0.5)">למי מתאים</div>
+    <h2 class="segments-title">שני מסלולים,<br>בעיה אחת</h2>
+    <p class="segments-sub">קספית מזהה את סוג העסק שלך ומתאים את הממשק אוטומטית</p>
+    <div class="seg-grid">
+      <div class="seg-card">
+        <div class="seg-ic" style="background:rgba(46,148,85,0.2)"><i class="ti ti-user" style="color:#5DC98A"></i></div>
+        <h3>עצמאי / עוסק בודד</h3>
+        <p>קבלן, אינסטלטור, מאמן כושר, מאפר, מעצב — כל מי שעובד לבד ורוצה לדעת כמה הכניס וכמה ישלם.</p>
+        <div class="seg-price">₪19 <span>לחודש</span></div>
+        <div class="seg-features">
+          <div class="seg-feat"><i class="ti ti-check"></i>הכנסות והוצאות</div>
+          <div class="seg-feat"><i class="ti ti-check"></i>חישוב ביטוח לאומי אוטומטי</div>
+          <div class="seg-feat"><i class="ti ti-check"></i>תחזית 60 יום</div>
+          <div class="seg-feat"><i class="ti ti-check"></i>רפורמת עסק זעיר</div>
+        </div>
+      </div>
+      <div class="seg-card" style="border-color:rgba(46,148,85,0.4);background:rgba(46,148,85,0.08)">
+        <div class="seg-ic" style="background:rgba(46,148,85,0.25)"><i class="ti ti-building-store" style="color:#5DC98A"></i></div>
+        <h3>עסק עם עובדים (1–10)</h3>
+        <p>קבלן עם צוות, חברת שמירה, סטודיו, מוסך — כל מי שצריך לנהל עובדים, לשלם שכר ולגבות מלקוחות.</p>
+        <div class="seg-price">₪79 <span>לחודש</span></div>
+        <div class="seg-features">
+          <div class="seg-feat"><i class="ti ti-check"></i>כל מה שבמסלול בודד</div>
+          <div class="seg-feat"><i class="ti ti-check"></i>טאבל שעות ← שכר ← חשבונית</div>
+          <div class="seg-feat"><i class="ti ti-check"></i>תחזית 90 יום</div>
+          <div class="seg-feat"><i class="ti ti-check"></i>לוח תשלומים מלא</div>
+          <div class="seg-feat"><i class="ti ti-check"></i>התראות וואטסאפ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="proof" id="proof">
+  <div class="proof-inner">
+    <div class="section-label">מה אומרים לקוחות</div>
+    <h2 class="section-title">עסקים שכבר<br>בשליטה</h2>
+    <div class="proof-grid">
+      <div class="proof-card">
+        <div class="proof-stars">★★★★★</div>
+        <p class="proof-text">"לפני קספית לא ידעתי שבספטמבר אני הולך להיות מינוס. עכשיו אני יודע שלושה שבועות מראש. זה שינה לי את החיים."</p>
+        <div class="proof-author">
+          <div class="proof-avatar" style="background:#D6EEE0;color:var(--green)">ר.כ</div>
+          <div>
+            <div class="proof-name">רונן כהן</div>
+            <div class="proof-role">קבלן שיפוצים, תל אביב</div>
+          </div>
+        </div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-stars">★★★★★</div>
+        <p class="proof-text">"הטאבל שמחושב לי אוטומטית לחשבונית ללקוח — זה לבד שווה את הכסף. עשיתי עם זה 4 חשבוניות בדקה אחת."</p>
+        <div class="proof-author">
+          <div class="proof-avatar" style="background:#DCE9F8;color:var(--blue)">מ.ל</div>
+          <div>
+            <div class="proof-name">מיכל לוי</div>
+            <div class="proof-role">חברת שמירה, חיפה</div>
+          </div>
+        </div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-stars">★★★★★</div>
+        <p class="proof-text">"לא ידעתי שאני יכול לנכות 30% הוצאות בלי קבלות. קספית הזכיר לי, עשיתי את זה, חסכתי 620 שקל. כיסה את המנוי לכל השנה."</p>
+        <div class="proof-author">
+          <div class="proof-avatar" style="background:#FDF0DC;color:var(--amber)">י.ש</div>
+          <div>
+            <div class="proof-name">יוסי שפירו</div>
+            <div class="proof-role">אינסטלטור עצמאי, ראשל"צ</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="pricing">
+  <h2 class="cta-title">רוצה להיות<br>בין הראשונים?</h2>
+  <p class="cta-sub">קספית בבנייה. הירשם עכשיו — נעדכן אותך כשמשיקים ותקבל גישה מוקדמת.</p>
+  <div style="max-width:500px;margin:0 auto;position:relative;z-index:1">
+    <form onsubmit="submitWaitlist(event,'cta')" style="display:flex;gap:8px;flex-direction:column">
+      <input type="email" id="email-cta" placeholder="כתובת מייל שלך..." required
+        style="padding:14px 18px;border-radius:14px;border:1.5px solid var(--border);font-size:15px;font-family:'Assistant',sans-serif;direction:rtl;color:var(--ink);outline:none;transition:border-color .2s;background:#fff"
+        onfocus="this.style.borderColor='var(--green-mid)'"
+        onblur="this.style.borderColor='var(--border)'">
+      <button type="submit" class="btn-primary" style="font-size:16px;padding:14px 32px;justify-content:center">
+        הצטרף לרשימת המתנה ←
+      </button>
+    </form>
+    <div id="success-cta" style="display:none;margin-top:14px;padding:12px 18px;background:var(--green-light);border-radius:12px;font-size:14px;color:var(--green);font-weight:500;text-align:center">
+      ✓ מצוין! נעדכן אותך ראשון כשקספית מוכן.
+    </div>
+    <p style="font-size:13px;color:var(--ink-light);margin-top:14px;position:relative;z-index:1">עוסק פטור · עוסק מורשה · חברה בע"מ · ללא ספאם</p>
+  </div>
+  <div id="counter" style="margin-top:28px;font-size:14px;color:var(--ink-mid);position:relative;z-index:1">
+    <span style="font-weight:700;color:var(--ink)" id="count-num">23</span> עסקים כבר נרשמו לרשימת המתנה
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo"><span>קספית</span> Kaspit</div>
+  <div class="footer-links">
+    <a href="#">אודות</a>
+    <a href="#">מחירים</a>
+    <a href="#">פרטיות</a>
+    <a href="#">תנאי שימוש</a>
+    <a href="#">צור קשר</a>
+  </div>
+  <div class="footer-note">© 2025 Kaspit · כל הזכויות שמורות · ישראל</div>
+</footer>
+
+<script>
+// Waitlist counter — starts at 23, grows with each signup
+let count = parseInt(localStorage.getItem('kaspit_count') || '23');
+document.getElementById('count-num').textContent = count;
+
+function submitWaitlist(e, source) {
+  e.preventDefault();
+  const emailEl = document.getElementById('email-' + source);
+  const successEl = document.getElementById('success-' + source);
+  const email = emailEl.value.trim();
+  if (!email) return;
+
+  // Save to localStorage (MVP — no backend yet)
+  const emails = JSON.parse(localStorage.getItem('kaspit_emails') || '[]');
+  if (!emails.includes(email)) {
+    emails.push(email);
+    localStorage.setItem('kaspit_emails', JSON.stringify(emails));
+    count++;
+    localStorage.setItem('kaspit_count', count);
+    document.getElementById('count-num').textContent = count;
+  }
+
+  // Show success
+  emailEl.style.display = 'none';
+  e.target.querySelector('button') && (e.target.querySelector('button').style.display = 'none');
+  successEl.style.display = 'block';
+
+  // Send to Formspree (free email collection service)
+  fetch('https://formspree.io/f/mvzydpnw', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({email: email, source: source, product: 'Kaspit'})
+  }).catch(() => {}); // Silent fail — localStorage always works
+}
+</script>
+
